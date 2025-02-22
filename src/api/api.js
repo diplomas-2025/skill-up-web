@@ -25,9 +25,8 @@ async function signIn(email, password) {
 
 // Функция для отправки теста
 async function submitTest(id, answers) {
-    const response = await axios.post(`${BASE_URL}/api/tests/${id}/submit`, {
-        answers
-    }, {
+    console.log(answers)
+    const response = await axios.post(`${BASE_URL}/api/tests/${id}/submit`, answers, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -103,8 +102,8 @@ async function getUserProgress(userId) {
 }
 
 // Функция для получения результатов тестов пользователя
-async function getTestResults(userId) {
-    const response = await axios.get(`${BASE_URL}/api/progress/test-results/${userId}`, {
+async function getTestResults(testId) {
+    const response = await axios.get(`${BASE_URL}/api/progress/test-results/by-test-id/${testId}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -125,6 +124,33 @@ async function getLessonById(id) {
 // Функция для получения курса по ID
 async function getCourseById(id) {
     const response = await axios.get(`${BASE_URL}/api/courses/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    return response.data;
+}
+
+export async function getLecturesByCourseId(id) {
+    const response = await axios.get(`${BASE_URL}/api/lessons?courseId=${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    return response.data;
+}
+
+export async function getTestsByCourseId(id) {
+    const response = await axios.get(`${BASE_URL}/api/tests?courseId=${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    return response.data;
+}
+
+export async function getUserInfo() {
+    const response = await axios.get(`${BASE_URL}/api/users/me`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
