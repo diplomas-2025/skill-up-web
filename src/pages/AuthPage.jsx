@@ -14,7 +14,8 @@ export const AuthScreen = () => {
         try {
             setError('')
             const response = await signIn(email, password)
-            localStorage.setItem('token', response.accessToken); // Сохраняем токен
+            localStorage.setItem('token', response.accessToken);
+            localStorage.setItem('role', response.role);
             window.location.reload()
         } catch (err) {
             console.log(err)

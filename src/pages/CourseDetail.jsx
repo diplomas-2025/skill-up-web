@@ -105,9 +105,11 @@ const CourseDetail = () => {
                 <Typography variant="h5" gutterBottom sx={{fontWeight: 'bold'}}>
                     Лекции
                 </Typography>
-                <Button onClick={() => navigate("/course/" + courseId + "/create-lecture")}>
-                    Добавить
-                </Button>
+                {localStorage.getItem("role") === "INSTRUCTOR" &&
+                    <Button onClick={() => navigate("/course/" + courseId + "/create-lecture")}>
+                        Добавить
+                    </Button>
+                }
                 <List>
                     {lectures.map((lecture) => (
                         <ListItem key={lecture.id} sx={{mb: 1, cursor: "pointer"}} onClick={() => navigate('/lesson/' + lecture.id)}>
@@ -116,7 +118,6 @@ const CourseDetail = () => {
                             </ListItemIcon>
                             <ListItemText
                                 primary={lecture.title}
-                                secondary={lecture.content}
                                 primaryTypographyProps={{fontWeight: 'medium'}}
                             />
                         </ListItem>
@@ -129,6 +130,16 @@ const CourseDetail = () => {
                 <Typography variant="h5" gutterBottom sx={{fontWeight: 'bold'}}>
                     Тесты
                 </Typography>
+                {localStorage.getItem("role") === "INSTRUCTOR" &&
+                    <>
+                        <Button onClick={() => navigate("/course/" + courseId + "/create-test")}>
+                            Добавить
+                        </Button>
+                        <Button onClick={() => navigate("/course/" + courseId + "/result")}>
+                            Результат
+                        </Button>
+                    </>
+                }
                 <Grid container spacing={2}>
                     {tests.map((test) => (
                         <Grid item key={test.id}>

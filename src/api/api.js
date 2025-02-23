@@ -158,6 +158,22 @@ export async function getUserInfo() {
     return response.data;
 }
 
+export async function getTestResult(courseId) {
+    return (await axios.get(`${BASE_URL}/api/progress/test-results/course?courseId=${courseId}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })).data
+}
+
+export async function getUserTestResult() {
+    return (await axios.get(`${BASE_URL}/api/progress/test-results`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })).data
+}
+
 // Экспортируем все функции для использования в других частях приложения
 export {
     signUp,

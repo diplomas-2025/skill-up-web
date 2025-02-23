@@ -9,6 +9,9 @@ import CreateCourse from "./pages/CreateCourse";
 import CreateLecture from "./pages/CreateLecture";
 import Header from "./pages/Header";
 import {LessonPage} from "./pages/LessonPage";
+import AddTestScreen from "./pages/AddTestScreen";
+import TestResultsList from "./pages/TestResultCard";
+import ProfileScreen from "./pages/ProfilePage";
 
 function App() {
     return (
@@ -24,7 +27,10 @@ function App() {
                         <Route path="/test/:testId" element={<TestScreen/>}/>
                         <Route path="/create-course" element={<CreateCourse/>}/>
                         <Route path="/course/:courseId/create-lecture" element={<CreateLecture/>}/>
+                        <Route path="/course/:courseId/create-test" element={<AddTestScreen/>}/>
+                        <Route path="/course/:courseId/result" element={<TestResultsList/>}/>
                         <Route path="/lesson/:lessonId" element={<LessonPage/>}/>
+                        <Route path="/profile" element={<ProfileScreen/>}/>
 
                         <Route path="*" element={<Navigate to="/"/>}/>
                     </>

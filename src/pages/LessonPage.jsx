@@ -27,9 +27,11 @@ export const LessonPage = () => {
                         <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", color: "primary.main" }}>
                             {lesson.title}
                         </Typography>
-                        <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                            {lesson.content}
-                        </Typography>
+                        <Typography
+                            variant="body1"
+                            sx={{ whiteSpace: "pre-line" }}
+                            dangerouslySetInnerHTML={{ __html: lesson.content }}
+                        />
                     </Paper>
                 )
             )}

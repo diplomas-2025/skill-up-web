@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Container,
     Typography,
@@ -14,14 +14,15 @@ import {
     Select,
     FormControl,
     InputLabel,
-    Button,
+    Button, Divider, Chip,
 } from '@mui/material';
-import { getAllCourses } from '../api/api';
-import { useNavigate } from 'react-router-dom';
-import { School as CourseIcon, Add as AddIcon } from '@mui/icons-material';
+import {getAllCourses} from '../api/api';
+import {useNavigate} from 'react-router-dom';
+import {School as CourseIcon, Add as AddIcon} from '@mui/icons-material';
+import { Person as PersonIcon } from '@mui/icons-material';
 
 export const MainPage = () => {
-    return <CourseList />;
+    return <CourseList/>;
 };
 
 const CourseList = () => {
@@ -72,14 +73,14 @@ const CourseList = () => {
 
     if (loading) {
         return (
-            <Container maxWidth="md" sx={{ mt: 4 }}>
+            <Container maxWidth="md" sx={{mt: 4}}>
                 <Typography variant="h4" align="center" gutterBottom>
                     Курсы
                 </Typography>
                 <Grid container spacing={3}>
                     {[...Array(6)].map((_, index) => (
                         <Grid item key={index} xs={12} sm={6} md={4}>
-                            <Skeleton variant="rectangular" height={200} />
+                            <Skeleton variant="rectangular" height={200}/>
                         </Grid>
                     ))}
                 </Grid>
@@ -89,38 +90,40 @@ const CourseList = () => {
 
     if (error) {
         return (
-            <Typography color="error" align="center" sx={{ mt: 4 }}>
+            <Typography color="error" align="center" sx={{mt: 4}}>
                 {error}
             </Typography>
         );
     }
 
     return (
-        <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
+        <Container maxWidth="md" sx={{mt: 4, mb: 4}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4}}>
+                <Typography variant="h4" sx={{fontWeight: 'bold', color: 'primary.main'}}>
                     Курсы
                 </Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => navigate('/create-course')}
-                >
-                    Добавить курс
-                </Button>
+                {localStorage.getItem("role") === "INSTRUCTOR" &&
+                    <Button
+                        variant="contained"
+                        startIcon={<AddIcon/>}
+                        onClick={() => navigate('/create-course')}
+                    >
+                        Добавить курс
+                    </Button>
+                }
             </Box>
 
             {/* Поиск и фильтры */}
-            <Box sx={{ mb: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <Box sx={{mb: 4, display: 'flex', gap: 2, flexWrap: 'wrap'}}>
                 <TextField
                     label="Поиск по названию"
                     variant="outlined"
                     fullWidth
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ flex: 2 }}
+                    sx={{flex: 2}}
                 />
-                <FormControl variant="outlined" sx={{ flex: 1 }}>
+                <FormControl variant="outlined" sx={{flex: 1}}>
                     <InputLabel>Фильтр по преподавателю</InputLabel>
                     <Select
                         value={filterInstructor}
@@ -135,7 +138,7 @@ const CourseList = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl variant="outlined" sx={{ flex: 1 }}>
+                <FormControl variant="outlined" sx={{flex: 1}}>
                     <InputLabel>Сортировка</InputLabel>
                     <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)} label="Сортировка">
                         <MenuItem value="title">По названию</MenuItem>
@@ -144,48 +147,53 @@ const CourseList = () => {
                 </FormControl>
             </Box>
 
-            {/* Список курсов */}
-            <Grid container spacing={3}>
-                {filteredAndSortedCourses.map((course) => (
-                    <Grid item key={course.id} xs={12} sm={6} md={4}>
-                        <Card
-                            elevation={3}
-                            onClick={() => navigate('/course/' + course.id)}
-                            sx={{
-                                cursor: 'pointer',
-                                transition: 'transform 0.2s, box-shadow 0.2s',
-                                '&:hover': {
-                                    transform: 'scale(1.05)',
-                                    boxShadow: 6,
-                                },
-                                borderRadius: 3,
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                background: 'linear-gradient(45deg, #f5f5f5, #e0e0e0)',
-                            }}
-                        >
-                            <CardHeader
-                                avatar={
-                                    <Avatar sx={{ bgcolor: 'primary.main' }}>
-                                        {course.instructor.fullName.charAt(0)}
-                                    </Avatar>
-                                }
-                                title={
-                                    <Typography variant="h6" fontWeight="bold">
-                                        {course.title}
-                                    </Typography>
-                                }
-                                subheader={`Преподаватель: ${course.instructor.fullName}`}
-                            />
-                            <Box sx={{ p: 2, textAlign: 'center' }}>
-                                <CourseIcon color="primary" fontSize="large" />
-                            </Box>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            {courses.length > 0 ? (
+                courses.map((course) => <CourseCard key={course.id} course={course} />)
+            ) : (
+                <Typography variant="body1" color="textSecondary">
+                    Нет доступных курсов.
+                </Typography>
+            )}
         </Container>
+    );
+};
+
+const CourseCard = ({ course }) => {
+    const navigate = useNavigate()
+    const { title, description, instructor } = course;
+
+    return (
+        <Card sx={{ mb: 3, boxShadow: 3, cursor: "pointer" }} onClick={() => navigate("/course/" + course.id)}>
+            <CardContent>
+                {/* Заголовок и описание курса */}
+                <Typography variant="h5" gutterBottom>
+                    {title}
+                </Typography>
+                <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
+                    {description}
+                </Typography>
+
+                <Divider sx={{ mb: 2 }} />
+
+                {/* Информация о преподавателе */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>
+                        <PersonIcon />
+                    </Avatar>
+                    <Box>
+                        <Typography variant="subtitle1">{instructor.fullName}</Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            {instructor.email}
+                        </Typography>
+                        <Chip
+                            label={instructor.role === 'INSTRUCTOR' ? 'Преподаватель' : 'Студент'}
+                            size="small"
+                            color={instructor.role === 'INSTRUCTOR' ? 'primary' : 'default'}
+                            sx={{ mt: 1 }}
+                        />
+                    </Box>
+                </Box>
+            </CardContent>
+        </Card>
     );
 };

@@ -12,6 +12,7 @@ export const RegistrationScreen = () => {
         try {
             const response = await signUp(firstName, email, password);
             localStorage.setItem('token', response.accessToken);
+            localStorage.setItem('role', response.role);
             window.location.reload();
         } catch (err) {
             setError('Ошибка при регистрации');
