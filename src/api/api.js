@@ -174,6 +174,18 @@ export async function getUserTestResult() {
     })).data
 }
 
+export async function addTest(courseId, title, data) {
+    return await axios.post(`${BASE_URL}/api/tests`, data, {
+        params: {
+            title: title,
+            courseId: courseId
+        },
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+}
+
 // Экспортируем все функции для использования в других частях приложения
 export {
     signUp,

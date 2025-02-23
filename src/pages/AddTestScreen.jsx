@@ -13,8 +13,12 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import {addTest} from "../api/api";
+import {useNavigate, useParams} from "react-router-dom";
 
 const AddTestScreen = () => {
+    const { courseId } = useParams()
+    const navigate = useNavigate()
     const [title, setTitle] = useState('');
     const [questions, setQuestions] = useState([
         {
@@ -85,11 +89,9 @@ const AddTestScreen = () => {
     // Отправка формы
     const handleSubmit = (e) => {
         e.preventDefault();
-        const test = {
-            title,
-            questions,
-        };
-        console.log(test); // Здесь можно отправить данные на сервер
+        addTest(courseId, title, questions).then(r => {
+            navigate('/course/' + courseId)
+        })
     };
 
     return (
